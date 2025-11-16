@@ -1,0 +1,33 @@
+version: "3.8"
+services:
+  backend:
+    build:
+      context: ./MLmodelandBackend
+      dockerfile: Dockerfile
+    image: beatsense-backend:latest
+    container_name: beatsense-backend
+    env_file:
+      - .env
+    environment:
+      - FLASK_ENV=production
+    ports:
+      - "5000:5000"
+    networks:
+      - beatsense-net
+
+  frontend:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    image: beatsense-frontend:latest
+    container_name: beatsense-frontend
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+    networks:
+      - beatsense-net
+
+networks:
+  beatsense-net:
+    driver: bridge
